@@ -72,18 +72,18 @@ function chargeProduits() {
   // Appel à l'API pour avoir la liste des produits
   // Trié par code, descendant
   // Verbe HTTP GET par défaut
-  doAjaxRequest(BACKEND + "/api/produit?sort=reference,nom")
+  doAjaxRequest(BACKEND + "/api/produits?sort=reference,nom")
     .then((json) => {
       data.listeProduits = json._embedded.produits;
     })
     .catch((error) => alert(error.message));
 }
 
-function ajouteProduits() {
+function ajouteProduit() {
   // Ajouter un produit avec les données du formulaire
   const options = {
     method: "POST", // Verbe HTTP POST pour ajouter un enregistrement
-    body: JSON.stringify(data.formulaireProduits),
+    body: JSON.stringify(data.formulaireProduit),
     headers: {
       "Content-Type": "application/json",
     },
@@ -91,7 +91,7 @@ function ajouteProduits() {
   doAjaxRequest(BACKEND + "/api/produits", options)
     .then(() => {
       // Réinitialiser le formulaire
-      data.formulaireProduits = { ...produitVide };
+      data.formulaireProduit = { ...produitVide };
       // Recharger la liste des catégories
       chargeProduits();
     })
