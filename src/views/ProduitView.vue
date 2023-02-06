@@ -12,9 +12,16 @@
         </div>
         <div>
           <input
-            id="prixunitaire"
-            v-model="data.formulaireProduit.prixUnitaire"
-            placeholder="Prix unitaire"
+            id="unitesStock"
+            v-model="data.formulaireProduit.UnitesEnStock"
+            placeholder="Unités en stock"
+          />
+        </div>
+        <div>
+          <input
+            id="unitesCommandees"
+            v-model="data.formulaireProduit.UnitesCommandees"
+            placeholder="Unités commandées"
           />
         </div>
         <button type="submit">Ajouter</button>
@@ -28,7 +35,8 @@
         <tr>
           <th>Référence</th>
           <th>Nom</th>
-          <th>Prix Unitaire</th>
+          <th>Unités en stock</th>
+          <th>Unités commandées</th>
           <th>Action</th>
         </tr>
         <!-- Si le tableau des produits est vide -->
@@ -39,12 +47,19 @@
         <tr v-for="produit in data.listeProduits" :key="produit.reference">
           <td>{{ produit.reference }}</td>
           <td>{{ produit.nom }}</td>
-          <td>{{ produit.prixUnitaire }}</td>
+          <td>{{ produit.unitesEnStock }}</td>
+          <td>{{ produit.unitesCommandees }}</td>
           <td>
             <button @click="deleteEntity(produit._links.self.href)">
               Supprimer
             </button>
           </td>
+        </tr>
+        <tr>
+          <th>button @click="pagePrecedente()">Page précédente</th>
+          <th><button @click="pageSuivante()">Page suivante</button></th>
+          <th><button @click="debutPage()">Début</button></th>
+          <th>button @click="finPage()">Fin</th>
         </tr>
       </table>
     </div>
@@ -72,7 +87,29 @@ function chargeProduits() {
   // Appel à l'API pour avoir la liste des produits
   // Trié par code, descendant
   // Verbe HTTP GET par défaut
-  doAjaxRequest(BACKEND + "/api/produits?sort=reference,nom")
+  doAjaxRequest(BACKEND + "/api/produits?sort=reference,nom&size=5")
+    .then((json) => {
+      data.listeProduits = json._embedded.produits;
+    })
+    .catch((error) => alert(error.message));
+}
+
+function debutPage() {
+  // Appel à l'API pour avoir la liste des produits
+  // Trié par code, descendant
+  // Verbe HTTP GET par défaut
+  doAjaxRequest(BACKEND + "/api/produits?sort=reference,nom&page=0&size=5")
+    .then((json) => {
+      data.listeProduits = json._embedded.produits;
+    })
+    .catch((error) => alert(error.message));
+}
+
+function pageSuivante() {
+  // Appel à l'API pour avoir la liste des produits
+  // Trié par code, descendant
+  // Verbe HTTP GET par défaut
+  doAjaxRequest(BACKEND + "/api/produits?sort=reference,nom&page=1&size=5")
     .then((json) => {
       data.listeProduits = json._embedded.produits;
     })
